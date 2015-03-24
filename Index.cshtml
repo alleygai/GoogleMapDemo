@@ -103,7 +103,6 @@
                     </div>*@
                 @*<input id="SearchBtn" type="button" value="Search" class="controls" onclick="calcRoute();" />*@
                 @*<div id="directionpanel" style="overflow-x:hidden;overflow-y:auto;height:400px;"></div>*@
-
             </form>
         </div>
         <div id="map_canvas" class="DivZBottom"></div>
@@ -116,12 +115,9 @@
         <input id="ex5" data-slider-id='exSlider' type="text" data-slider-min="1" data-slider-max="100" data-slider-step="1" data-slider-value="50" />
     </div>
 </div>
-
 <script type="text/javascript">
-
     $(document).ready(function () {
         Initialize();
-
         $('#ex1').slider({
             formatter: function (value) {
                 return 'Current value: ' + value;
@@ -148,14 +144,11 @@
             }
         });
     });
-
     // Where all the fun happens
     function Initialize() {
-
         // Google has tweaked their interface somewhat - this tells the api to use that new UI
         google.maps.visualRefresh = true;
         var Liverpool = new google.maps.LatLng(53.408841, -2.981397);
-
         // These are options that set initial zoom level, where the map is centered globally to start, and the type of map to show
         var mapOptions = {
             zoom: 14,
@@ -163,38 +156,29 @@
             mapTypeId: google.maps.MapTypeId.ROADMAP
             //mapTypeId: google.maps.MapTypeId.G_NORMAL_MAP
         };
-
         // This makes the div with id "map_canvas" a google map
         map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-
         var defaultBounds = new google.maps.LatLngBounds(
             new google.maps.LatLng(-33.8902, 151.1759),
             new google.maps.LatLng(-33.8474, 151.2631));
         map.fitBounds(defaultBounds);
-
         //map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
         var startValue = (document.getElementById('startvalue'));
         var endValue = (document.getElementById('endvalue'));
-
         var startSearchBox = new google.maps.places.SearchBox(startValue);
         var endSearchBox = new google.maps.places.SearchBox(endValue);
-
         markers = [];
-
         // [START region_getplaces]
         // Listen for the event fired when the user selects an item from the
         // pick list. Retrieve the matching places for that item.
         google.maps.event.addListener(startSearchBox, 'places_changed', function () {
             var places = startSearchBox.getPlaces();
-
             if (places.length == 0) {
                 return;
             }
             for (var i = 0, marker; marker = markers[i]; i++) {
                 marker.setMap(null);
             }
-
             // For each place, get the icon, place name, and location.
             markers = [];
             var bounds = new google.maps.LatLngBounds();
@@ -206,7 +190,6 @@
                     anchor: new google.maps.Point(17, 34),
                     scaledSize: new google.maps.Size(25, 25)
                 };
-
                 // Create a marker for each place.
                 var marker = new google.maps.Marker({
                     map: map,
@@ -214,25 +197,19 @@
                     title: place.name,
                     position: place.geometry.location
                 });
-
                 markers.push(marker);
-
                 bounds.extend(place.geometry.location);
             }
-
             map.fitBounds(bounds);
         });
-
         google.maps.event.addListener(endSearchBox, 'places_changed', function () {
             var places = endSearchBox.getPlaces();
-
             if (places.length == 0) {
                 return;
             }
             for (var i = 0, marker; marker = markers[i]; i++) {
                 marker.setMap(null);
             }
-
             // For each place, get the icon, place name, and location.
             markers = [];
             var bounds = new google.maps.LatLngBounds();
@@ -244,7 +221,6 @@
                     anchor: new google.maps.Point(17, 34),
                     scaledSize: new google.maps.Size(25, 25)
                 };
-
                 // Create a marker for each place.
                 var marker = new google.maps.Marker({
                     map: map,
@@ -252,17 +228,13 @@
                     title: place.name,
                     position: place.geometry.location
                 });
-
                 markers.push(marker);
-
                 bounds.extend(place.geometry.location);
             }
-
             map.fitBounds(bounds);
             calcRoute();
         });
         // [END region_getplaces]
-
         // Bias the SearchBox results towards places that are within the bounds of the
         // current map's viewport.
         google.maps.event.addListener(map, 'bounds_changed', function () {
